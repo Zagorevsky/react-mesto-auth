@@ -1,5 +1,7 @@
+// импортируем ключ авторзации на сервере
 import {authorization} from './utils.js'
 
+// используем готовый класс из прошлой работы для получения данных с сервера
 class Api {
   constructor(options) {
     this._baseUrl = options.baseUrl;
@@ -91,7 +93,7 @@ class Api {
 
 }
 
-// экземпляр класса Api
+// создаем экземпляр класса Api и экспоортируем его
 export const api = new Api({
   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-29',
   headers: {
@@ -99,4 +101,3 @@ export const api = new Api({
     'Content-Type': 'application/json'
   }
 });
-

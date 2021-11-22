@@ -2,28 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
 import Card from './Card.js';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
+function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
+  // стейт для аватара
   const [userAvatar, setUserAvatar] = useState('');
-  const [userName, setUserName] = useState('Жак-Ив Кусто');
-  const [userDescription, setUserDescription] = useState('Исследователь океана');
+  // стейт для имени пользователя
+  const [userName, setUserName] = useState('');
+  // стейт для описания пользователя
+  const [userDescription, setUserDescription] = useState('');
+  // стейт для хранения карточек
   const [cards, setCards] = useState([]);
 
+  // Получаем одновременно все данные с сервера для отрисовки страницы
   useEffect(() => {
     Promise.all([api.getInitialProfile(), api.getInitialCards()])
       .then(([profile, cards]) => {
         setUserAvatar(profile.avatar);
         setUserName(profile.name);
         setUserDescription(profile.about);
-        setCards(cards.map((item)=>({
+        setCards(cards.map((item) => ({
           id: item._id,
           name: item.name,
           link: item.link,
           likes: item.likes.length,
         })));
       })
-      .catch((err) => {console.log(err)}) // выведем ошибку в консоль
-  
-    }, []);
+      .catch((err) => { console.log(err) }) // выведем ошибку в консоль
+
+  }, []);
 
 
   return (
@@ -31,7 +36,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
       <section className="profile">
         <div className="profile__info">
           <div className="profile__container">
-            <img className="profile__avatar"  alt="" style={{ backgroundImage: `url(${userAvatar})` }} />
+            <img className="profile__avatar" alt="" style={{ backgroundImage: `url(${userAvatar})` }} />
             <div className="profile__overlay" onClick={onEditAvatar}>
               <div className="profile__edit-avatar" ></div>
             </div>
@@ -46,7 +51,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick}) {
       </section>
       <section>
         <ul className="elements">
-          { cards.map(({ id, ...props }) => <Card key={id} {...props} onCardClick={onCardClick}/>) }
+          {cards.map(({ id, ...props }) => <Card key={id} {...props} onCardClick={onCardClick} />)}
         </ul>
       </section>
     </main>

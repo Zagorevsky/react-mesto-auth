@@ -6,15 +6,16 @@ import PopupWithForm from "./PopupWithForm.js";
 import React, { useState } from 'react';
 
 function App() {
-
+  // стейт для хранения состояния попап редактировать профиль пользователя
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-
+  // стейт для хранения состояния попап Новая картинка
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-
+  // стейт для хранения состояния попап аватар
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-
+  // стейт для хранения состояния и данных попапа - Большая картинка
   const [selectedCard, setSelectedCard] = useState('');
 
+  // закрытие всех попапов в одном обработчике
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -30,6 +31,7 @@ function App() {
           onEditAvatar={() => setIsEditAvatarPopupOpen(true)}
           onEditProfile={() => setIsEditProfilePopupOpen(true)}
           onAddPlace={() => setIsAddPlacePopupOpen(true)}
+          // пробрасываем через модуль Main обработчик открытия попапа - Большая картинка
           onCardClick={setSelectedCard}
         />
         <Footer />
@@ -53,7 +55,9 @@ function App() {
             <span id="card-link-error" className="popup__error"></span>
           </div>
         </PopupWithForm>
-        <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
+        {/* передаем состояние и данные в модуль через пропс - card 
+        и забираем сигнал закрытия попапа через пропс - onClose */}
+        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
         <PopupWithForm title='Вы уверены?' name='delit' button='Да' />
         <PopupWithForm title='Обновить аватар' name='avatar' button='Сохранить' isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
           <div className="popup__block-input"><input id="avatar-link" className="popup__input" type="url" name="avatar"
