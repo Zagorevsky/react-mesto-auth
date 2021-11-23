@@ -32,11 +32,11 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
 
 
   return (
-    <main classNameName="content">
+    <main className="content">
       <section className="profile">
         <div className="profile__info">
           <div className="profile__container">
-            <img className="profile__avatar" alt="" style={{ backgroundImage: `url(${userAvatar})` }} />
+            <div className="profile__avatar" style={{ backgroundImage: `url(${userAvatar})` }}></div>
             <div className="profile__overlay" onClick={onEditAvatar}>
               <div className="profile__edit-avatar" ></div>
             </div>
@@ -51,7 +51,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
       </section>
       <section>
         <ul className="elements">
-          {cards.map(({ id, ...props }) => <Card key={id} {...props} onCardClick={onCardClick} />)}
+          {cards.map(({ id, ...props }) => (<Card key={id} {...props} onCardClick={onCardClick} />))}
         </ul>
       </section>
     </main>

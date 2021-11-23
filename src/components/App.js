@@ -13,18 +13,18 @@ function App() {
   // стейт для хранения состояния попап аватар
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   // стейт для хранения состояния и данных попапа - Большая картинка
-  const [selectedCard, setSelectedCard] = useState('');
+  const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
 
   // закрытие всех попапов в одном обработчике
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setSelectedCard('');
+    setSelectedCard({ name: '', link: '' });
   };
 
   return (
-    <body className="page">
+    <div className="page">
       <div className="page__container">
         <Header />
         <Main
@@ -37,17 +37,17 @@ function App() {
         <Footer />
         <PopupWithForm title='Редактировать профиль' name='profile' button='Сохранить' isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
           <div className="popup__block-input"><input id="full-name" className="popup__input" type="text" name="fullname"
-            required minlength="2" maxlength="40" />
+            placeholder="Имя" required minLength="2" maxLength="40" />
             <span id="full-name-error" className="popup__error"></span>
           </div>
           <div className="popup__block-input"><input id="description" className="popup__input" type="text" name="description"
-            required minlength="2" maxlength="200" />
+            placeholder="О себе" required minLength="2" maxLength="200" />
             <span id="description-error" className="popup__error"></span>
           </div>
         </PopupWithForm>
         <PopupWithForm title='Новое место' name='card' button='Создать' isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
           <div className="popup__block-input"><input id="card-title" className="popup__input" type="text" name="name"
-            placeholder="Название" required minlength="1" maxlength="30" />
+            placeholder="Название" required minLength="1" maxLength="30" />
             <span id="card-title-error" className="popup__error"></span>
           </div>
           <div className="popup__block-input"><input id="card-link" className="popup__input" type="url" name="link"
@@ -66,7 +66,7 @@ function App() {
           </div>
         </PopupWithForm>
       </div>
-    </body>
+    </div>
   );
 }
 

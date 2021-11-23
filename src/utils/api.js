@@ -18,7 +18,7 @@ class Api {
 
   // запрос карточек из базы данных
   getInitialCards() {
-    return fetch(this._baseUrl + '/cards', {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'GET',
       headers: this._headers
     })
@@ -27,7 +27,7 @@ class Api {
 
   // запрос данных профиля с сервера
   getInitialProfile() {
-    return fetch(this._baseUrl + '/users/me', {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: 'GET',
       headers: this._headers
     })
@@ -36,7 +36,7 @@ class Api {
 
   // запись новой карточки на сервер
   addCardToServer(data) {
-    return fetch(this._baseUrl + '/cards', {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(data)
@@ -46,7 +46,7 @@ class Api {
 
   // запись данных профиля на серве
   addProfileToServer(data) {
-    return fetch(this._baseUrl + '/users/me', {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(data)
@@ -56,7 +56,7 @@ class Api {
 
   // запись данных  автара на серве
   addAvatarToServer(data) {
-    return fetch(this._baseUrl + '/users/me/avatar', {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(data)
@@ -66,7 +66,7 @@ class Api {
 
   // добавить лайк на сервер
   addLikesToServer(id) {
-    return fetch(this._baseUrl + '/cards/likes/' + `${id}`, {
+    return fetch(`${this._baseUrl}/cards/likes/${id}`, {
       method: 'PUT',
       headers: this._headers,
     })
@@ -75,7 +75,7 @@ class Api {
 
   // удалить лайк с сервера
   deleteLikesToServer(id) {
-    return fetch(this._baseUrl + '/cards/likes/' + `${id}`, {
+    return fetch(`${this._baseUrl}/cards/likes/${id}`, {
       method: 'DELETE',
       headers: this._headers,
     })
@@ -84,7 +84,7 @@ class Api {
 
   // удалить карту с сервера
   deleteCardToServer(id) {
-    return fetch(this._baseUrl + '/cards/' + `${id}`, {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
       method: 'DELETE',
       headers: this._headers,
     })
