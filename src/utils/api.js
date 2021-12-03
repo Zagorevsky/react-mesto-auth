@@ -64,6 +64,12 @@ class Api {
       .then(this._handlerError);
   }
 
+  // спереключатель лайков на сервере
+  changeLikeCardStatus(id, isLiked) {
+    console.log(isLiked)
+    return isLiked ?  this.addLikesToServer(id) :this.deleteLikesToServer(id)
+  }
+
   // добавить лайк на сервер
   addLikesToServer(id) {
     return fetch(`${this._baseUrl}/cards/likes/${id}`, {
