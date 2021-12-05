@@ -3,6 +3,7 @@ import Footer from "./Footer.js";
 import Main from "./Main.js";
 import ImagePopup from "./ImagePopup.js";
 import PopupWithForm from "./PopupWithForm.js";
+import EditProfilePopup from "./EditProfilePopup.js";
 import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
@@ -42,29 +43,35 @@ function App() {
     setSelectedCard({ name: '', link: '' });
   };
 
+  //
+  const handleUpdateUser = (profile) => {
+    api.addProfileToServer(profile)
+    .then((profile) => {
+      setCurrentUser({
+        avatar: profile.avatar,
+        name: profile.name,
+        about: profile.about,
+        id: profile._id
+      })
+    })
+    .catch((err) => { console.log(err) }); // выведем ошибку в консоль
+    closeAllPopups();
+  }
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    <CurrentUserContext.Provider value={ currentUser }>
       <div className="page">
         <div className="page__container">
           <Header />
           <Main
-            onEditAvatar={() => setIsEditAvatarPopupOpen(true)}
-            onEditProfile={() => setIsEditProfilePopupOpen(true)}
-            onAddPlace={() => setIsAddPlacePopupOpen(true)}
+            onEditAvatar={ () => setIsEditAvatarPopupOpen(true) }
+            onEditProfile={ () => setIsEditProfilePopupOpen(true) }
+            onAddPlace={ () => setIsAddPlacePopupOpen(true) }
             // пробрасываем через модуль Main обработчик открытия попапа - Большая картинка
-            onCardClick={setSelectedCard}
+            onCardClick={ setSelectedCard }
           />
           <Footer />
-          <PopupWithForm title='Редактировать профиль' name='profile' button='Сохранить' isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}>
-            <div className="popup__block-input"><input id="full-name" className="popup__input" type="text" name="fullname"
-              placeholder="Имя" required minLength="2" maxLength="40" />
-              <span id="full-name-error" className="popup__error"></span>
-            </div>
-            <div className="popup__block-input"><input id="description" className="popup__input" type="text" name="description"
-              placeholder="О себе" required minLength="2" maxLength="200" />
-              <span id="description-error" className="popup__error"></span>
-            </div>
-          </PopupWithForm>
+          <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
           <PopupWithForm title='Новое место' name='card' button='Создать' isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}>
             <div className="popup__block-input"><input id="card-title" className="popup__input" type="text" name="name"
               placeholder="Название" required minLength="1" maxLength="30" />
@@ -75,11 +82,11 @@ function App() {
               <span id="card-link-error" className="popup__error"></span>
             </div>
           </PopupWithForm>
-          {/* передаем состояние и данные в модуль через пропс - card 
+          {/* передаем состояние и данные в модуль через пропс - card
         и забираем сигнал закрытия попапа через пропс - onClose */}
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          <ImagePopup card={ selectedCard } onClose={ closeAllPopups } />
           <PopupWithForm title='Вы уверены?' name='delit' button='Да' />
-          <PopupWithForm title='Обновить аватар' name='avatar' button='Сохранить' isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}>
+          <PopupWithForm title='Обновить аватар' name='avatar' button='Сохранить' onUpdateUser={handleUpdateUser} isOpen={ isEditAvatarPopupOpen } onClose={ closeAllPopups }>
             <div className="popup__block-input"><input id="avatar-link" className="popup__input" type="url" name="avatar"
               placeholder="Ссылка на аватар" required />
               <span id="avatar-link-error" className="popup__error"></span>
