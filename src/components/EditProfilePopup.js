@@ -19,8 +19,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   const handleSubmit  = (e) =>{
     e.preventDefault();
-  // Передаём значения управляемых компонентов во внешний обработчик
-
     onUpdateUser({
     name: name,
     about: description,

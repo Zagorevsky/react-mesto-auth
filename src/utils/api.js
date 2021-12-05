@@ -66,7 +66,6 @@ class Api {
 
   // спереключатель лайков на сервере
   changeLikeCardStatus(id, isLiked) {
-    console.log(isLiked)
     return isLiked ?  this.addLikesToServer(id) :this.deleteLikesToServer(id)
   }
 
