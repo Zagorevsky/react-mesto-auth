@@ -45,7 +45,7 @@ class Api {
   }
 
   // запись данных профиля на серве
-  addProfileToServer(data) {
+  updateProfileToServer(data) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
@@ -55,7 +55,7 @@ class Api {
   }
 
   // запись данных  автара на серве
-  addAvatarToServer(data) {
+  updateAvatarToServer(data) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
@@ -66,11 +66,11 @@ class Api {
 
   // спереключатель лайков на сервере
   changeLikeCardStatus(id, isLiked) {
-    return isLiked ?  this.addLikesToServer(id) :this.deleteLikesToServer(id)
+    return isLiked ?  this._addLikesToServer(id) :this._deleteLikesToServer(id)
   }
 
   // добавить лайк на сервер
-  addLikesToServer(id) {
+  _addLikesToServer(id) {
     return fetch(`${this._baseUrl}/cards/likes/${id}`, {
       method: 'PUT',
       headers: this._headers,
@@ -79,7 +79,7 @@ class Api {
   }
 
   // удалить лайк с сервера
-  deleteLikesToServer(id) {
+  _deleteLikesToServer(id) {
     return fetch(`${this._baseUrl}/cards/likes/${id}`, {
       method: 'DELETE',
       headers: this._headers,

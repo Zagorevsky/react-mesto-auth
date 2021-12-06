@@ -26,10 +26,16 @@ function App() {
   // стейт для хранения карточек
   const [cards, setCards] = useState([]);
 
-  // Первичная загрузка карточек с сервера
+  // Первичная загрузка всех данных с сервера
   useEffect(() => {
-    api.getInitialCards()
-      .then((cards) => {
+    Promise.all([ api.getInitialProfile(), api.getInitialCards() ])
+      .then(([profile, cards]) => {
+        setCurrentUser({
+          avatar: profile.avatar,
+          name: profile.name,
+          about: profile.about,
+          id: profile._id
+        })
         setCards(cards.map((card) => ({
           key: card._id,
           id: card._id,
@@ -39,7 +45,7 @@ function App() {
           likes: card.likes,
         })));
       })
-      .catch((err) => { console.log(err) }) // выведем ошибку в консоль
+      .catch((err) => { console.log(err); })
   }, []);
 
   // Добавить-удалить лайк на сервер
@@ -77,21 +83,6 @@ function App() {
       .catch((err) => { console.log(err) }) // выведем ошибку в консоль
   }
 
-
-  useEffect(() => {
-    api.getInitialProfile()
-      .then((profile) => {
-        setCurrentUser({
-          avatar: profile.avatar,
-          name: profile.name,
-          about: profile.about,
-          id: profile._id
-        })
-      })
-      .catch((err) => { console.log(err) }) // выведем ошибку в консоль
-  }, []);
-
-
   // закрытие всех попапов в одном обработчике
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -101,7 +92,7 @@ function App() {
   };
 
   const handleUpdateUser = (profile) => {
-    api.addProfileToServer(profile)
+    api.updateProfileToServer(profile)
       .then((newProfile) => {
         setCurrentUser({
           avatar: newProfile.avatar,
@@ -109,13 +100,13 @@ function App() {
           about: newProfile.about,
           id: newProfile._id
         })
+        closeAllPopups();
       })
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
-    closeAllPopups();
   }
 
   const handleUpdateAvatar = (profile) => {
-    api.addAvatarToServer(profile)
+    api.updateAvatarToServer(profile)
       .then((newProfile) => {
         setCurrentUser({
           avatar: newProfile.avatar,
@@ -123,25 +114,25 @@ function App() {
           about: newProfile.about,
           id: newProfile._id
         })
+        closeAllPopups();
       })
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
-    closeAllPopups();
   }
 
   const handleAddPlaceSubmit = (card) => {
     api.addCardToServer(card)
       .then((newCard) => {
-        setCards([...cards, {
+        setCards([{
           key: newCard._id,
           id: newCard._id,
           idOwner: newCard.owner._id,
           name: newCard.name,
           link: newCard.link,
           likes: newCard.likes,
-        }]);
+        }, ...cards]);
+        closeAllPopups();
       })
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
-    closeAllPopups();
   }
 
   return (
