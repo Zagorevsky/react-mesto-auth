@@ -128,7 +128,7 @@ function App() {
     closeAllPopups();
   }
 
-  const handleAddPlaceSubmit = (card) =>{
+  const handleAddPlaceSubmit = (card) => {
     api.addCardToServer(card)
       .then((newCard) => {
         setCards([...cards, {
@@ -141,7 +141,7 @@ function App() {
         }]);
       })
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
-      closeAllPopups();
+    closeAllPopups();
   }
 
   return (
@@ -154,13 +154,13 @@ function App() {
             onEditProfile={ () => setIsEditProfilePopupOpen(true) }
             onAddPlace={ () => setIsAddPlacePopupOpen(true) }
             onCardClick={ setSelectedCard }
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
+            cards={ cards }
+            onCardLike={ handleCardLike }
+            onCardDelete={ handleCardDelete }
           />
           <Footer />
           <EditProfilePopup isOpen={ isEditProfilePopupOpen } onClose={ closeAllPopups } onUpdateUser={ handleUpdateUser } />
-          <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups}  onAddPlace={handleAddPlaceSubmit}/>
+          <AddPlacePopup isOpen={ isAddPlacePopupOpen } onClose={ closeAllPopups } onAddPlace={ handleAddPlaceSubmit } />
           <ImagePopup card={ selectedCard } onClose={ closeAllPopups } />
           <PopupWithForm title='Вы уверены?' name='delit' button='Да' />
           <EditAvatarPopup isOpen={ isEditAvatarPopupOpen } onClose={ closeAllPopups } onUpdateAvatar={ handleUpdateAvatar } />
