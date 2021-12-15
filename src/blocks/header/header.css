@@ -1,5 +1,7 @@
 /* контейнер для хейдера */
 .header {
+  display: flex;
+  justify-content: space-between;
   min-height: 74px;
   margin: 45px 0 0 0;
   padding: 0;

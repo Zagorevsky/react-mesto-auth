@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 import Header from "./Header.js";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
@@ -5,11 +7,13 @@ import ImagePopup from "./ImagePopup.js";
 import PopupWithForm from "./PopupWithForm.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
-import React, { useState, useEffect } from 'react';
-import { api } from '../utils/api';
-import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import AddPlacePopup from "./AddPlacePopup.js";
-
+import Login from './Login.js';
+import Register from './Register.js';
+import ProtectedRoute from './ProtectedRoute.js'
+import { api } from '../utils/api.js';
+import * as auth from '../utils/auth.js';
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 function App() {
   // стейт для хранения состояния попап редактировать профиль пользователя
@@ -26,9 +30,51 @@ function App() {
   // стейт для хранения карточек
   const [cards, setCards] = useState([]);
 
+  // стейт для хранения состояния авторизации
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // стейт для хранения логина - е-маила
+  const [login, setLogin] = useState('')
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    handleTokenCheck(location.pathname)
+  }, [])
+
+  // установка состояния авторизованный пользователь
+  const handleLogin = () => {
+    setLoggedIn(true)
+  }
+
+  // проверка текущей авторизации
+  const handleTokenCheck = (path) => {
+    if (localStorage.getItem('token')) {
+      auth
+        .checkToken(localStorage.getItem('token'))
+        .then(res => {
+          if (res) {
+            setLogin(res.data.email)
+            setLoggedIn(true)
+            navigate(path)
+          }
+        })
+    }
+  }
+
+  // выход - сброс авторизации
+  const handleLogout = (event) => {
+    event.preventDefault()
+    localStorage.removeItem('token')
+    setLoggedIn(false)
+    navigate('/sign-in')
+  }
+
   // Первичная загрузка всех данных с сервера
   useEffect(() => {
-    Promise.all([ api.getInitialProfile(), api.getInitialCards() ])
+    Promise.all([api.getInitialProfile(), api.getInitialCards()])
       .then(([profile, cards]) => {
         setCurrentUser({
           avatar: profile.avatar,
@@ -139,16 +185,23 @@ function App() {
     <CurrentUserContext.Provider value={ currentUser }>
       <div className="page">
         <div className="page__container">
-          <Header />
-          <Main
-            onEditAvatar={ () => setIsEditAvatarPopupOpen(true) }
-            onEditProfile={ () => setIsEditProfilePopupOpen(true) }
-            onAddPlace={ () => setIsAddPlacePopupOpen(true) }
-            onCardClick={ setSelectedCard }
-            cards={ cards }
-            onCardLike={ handleCardLike }
-            onCardDelete={ handleCardDelete }
-          />
+          <Header loggedIn={loggedIn} logOut={handleLogout} login={login}/>
+          <Routes>
+            <Route path="/" element={ <ProtectedRoute loggedIn={loggedIn}>
+                <Main
+                  onEditAvatar={ () => setIsEditAvatarPopupOpen(true) }
+                  onEditProfile={ () => setIsEditProfilePopupOpen(true) }
+                  onAddPlace={ () => setIsAddPlacePopupOpen(true) }
+                  onCardClick={ setSelectedCard }
+                  cards={ cards }
+                  onCardLike={ handleCardLike }
+                  onCardDelete={ handleCardDelete }
+                />
+              </ProtectedRoute>} />
+            <Route path="/sign-up" element={ <Register /> } />
+            <Route path="/sign-in" element={ <Login onLogin={ handleLogin } /> } />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
           <Footer />
           <EditProfilePopup isOpen={ isEditProfilePopupOpen } onClose={ closeAllPopups } onUpdateUser={ handleUpdateUser } />
           <AddPlacePopup isOpen={ isAddPlacePopupOpen } onClose={ closeAllPopups } onAddPlace={ handleAddPlaceSubmit } />

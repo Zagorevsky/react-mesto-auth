@@ -7,7 +7,6 @@
   background-size: 141px 33px;
 }
 
-/* Делаем логотип черным при наведении курсора */
 .header__logo:hover {
   opacity: 0.6;
   cursor: pointer;
