@@ -10,7 +10,8 @@ import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import Login from './Login.js';
 import Register from './Register.js';
-import ProtectedRoute from './ProtectedRoute.js'
+import ProtectedRoute from './ProtectedRoute.js';
+import InfoTooltip from './InfoTooltip.js';
 import { api } from '../utils/api.js';
 import * as auth from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
@@ -207,6 +208,7 @@ function App() {
           <AddPlacePopup isOpen={ isAddPlacePopupOpen } onClose={ closeAllPopups } onAddPlace={ handleAddPlaceSubmit } />
           <ImagePopup card={ selectedCard } onClose={ closeAllPopups } />
           <PopupWithForm title='Вы уверены?' name='delit' button='Да' />
+          <InfoTooltip />
           <EditAvatarPopup isOpen={ isEditAvatarPopupOpen } onClose={ closeAllPopups } onUpdateAvatar={ handleUpdateAvatar } />
         </div>
       </div>
