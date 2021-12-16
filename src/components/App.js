@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Navigate, Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Header from "./Header.js";
 import Footer from "./Footer.js";
 import Main from "./Main.js";
@@ -27,6 +27,10 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({ name: '', link: '' });
   // стейт для хранения данных пользователя
   const [currentUser, setCurrentUser] = useState({ avatar: '', name: '', about: '', id: '' });
+  // стейт для хранения состояния попап - Результат регистрации
+  const [isInfoTooltip, setIsInfoTooltip] = useState(false);
+  // стейт состояния регистрации
+  const [isRegistrationResult, setIsRegistrationResult] = useState(false);
 
   // стейт для хранения карточек
   const [cards, setCards] = useState([]);
@@ -124,7 +128,6 @@ function App() {
         const newCard = cards.filter((c) => {
           return id !== c.id
         })
-        // Обновляем стейт
         setCards(newCard);
       })
       .catch((err) => { console.log(err) }) // выведем ошибку в консоль
@@ -136,6 +139,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({ name: '', link: '' });
+    setIsInfoTooltip(false);
   };
 
   const handleUpdateUser = (profile) => {
@@ -186,29 +190,29 @@ function App() {
     <CurrentUserContext.Provider value={ currentUser }>
       <div className="page">
         <div className="page__container">
-          <Header loggedIn={loggedIn} logOut={handleLogout} login={login}/>
+          <Header loggedIn={ loggedIn } logOut={ handleLogout } login={ login } />
           <Routes>
-            <Route path="/" element={ <ProtectedRoute loggedIn={loggedIn}>
-                <Main
-                  onEditAvatar={ () => setIsEditAvatarPopupOpen(true) }
-                  onEditProfile={ () => setIsEditProfilePopupOpen(true) }
-                  onAddPlace={ () => setIsAddPlacePopupOpen(true) }
-                  onCardClick={ setSelectedCard }
-                  cards={ cards }
-                  onCardLike={ handleCardLike }
-                  onCardDelete={ handleCardDelete }
-                />
-              </ProtectedRoute>} />
-            <Route path="/sign-up" element={ <Register /> } />
+            <Route path="/" element={ <ProtectedRoute loggedIn={ loggedIn }>
+              <Main
+                onEditAvatar={ () => setIsEditAvatarPopupOpen(true) }
+                onEditProfile={ () => setIsEditProfilePopupOpen(true) }
+                onAddPlace={ () => setIsAddPlacePopupOpen(true) }
+                onCardClick={ setSelectedCard }
+                cards={ cards }
+                onCardLike={ handleCardLike }
+                onCardDelete={ handleCardDelete }
+              />
+            </ProtectedRoute> } />
+            <Route path="/sign-up" element={ <Register onInfoTooltips={ setIsInfoTooltip } registrationResult={ setIsRegistrationResult } /> } />
             <Route path="/sign-in" element={ <Login onLogin={ handleLogin } /> } />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={ <Navigate to="/" /> } />
           </Routes>
           <Footer />
           <EditProfilePopup isOpen={ isEditProfilePopupOpen } onClose={ closeAllPopups } onUpdateUser={ handleUpdateUser } />
           <AddPlacePopup isOpen={ isAddPlacePopupOpen } onClose={ closeAllPopups } onAddPlace={ handleAddPlaceSubmit } />
           <ImagePopup card={ selectedCard } onClose={ closeAllPopups } />
           <PopupWithForm title='Вы уверены?' name='delit' button='Да' />
-          <InfoTooltip />
+          <InfoTooltip isOpen={ isInfoTooltip } onClose={ closeAllPopups } isRegistrationResult={ isRegistrationResult } />
           <EditAvatarPopup isOpen={ isEditAvatarPopupOpen } onClose={ closeAllPopups } onUpdateAvatar={ handleUpdateAvatar } />
         </div>
       </div>

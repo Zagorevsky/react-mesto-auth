@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as auth from '../utils/auth';
 
-export default function Register() {
+export default function Register({ onInfoTooltips, registrationResult}) {
+
   const [values, setValues] = useState({
     email: '',
     password: ''
@@ -19,16 +20,18 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (values.password !== '') {
       auth
         .register(values.password, values.email)
         .then(res => {
-          if (res.statusCode !== 400 && res.statusCode !== 401) {
-            navigate('/sign-in')
-          }
+          if (res.data) {
+            registrationResult(true);
+          } else { registrationResult(false); }
+          onInfoTooltips(true);
+          navigate('/');
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)})
     }
   }
 
