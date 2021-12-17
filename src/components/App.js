@@ -61,11 +61,12 @@ function App() {
         .checkToken(localStorage.getItem('token'))
         .then(res => {
           if (res) {
-            setLogin(res.data.email)
-            setLoggedIn(true)
-            navigate(path)
+            setLogin(res.data.email);
+            handleLogin();
+            navigate(path);
           }
         })
+        .catch((err) => { console.log(err); })
     }
   }
 
@@ -133,6 +134,17 @@ function App() {
       .catch((err) => { console.log(err) }) // выведем ошибку в консоль
   }
 
+  // закрытие попап по esc
+  useEffect(() => {
+    const closeByEscape = (e) => {
+      if (e.key === 'Escape') {
+        closeAllPopups();
+      }
+    }
+    document.addEventListener('keydown', closeByEscape);
+    return () => document.removeEventListener('keydown', closeByEscape)
+}, [])
+
   // закрытие всех попапов в одном обработчике
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -186,6 +198,44 @@ function App() {
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
   }
 
+  const handleRegisterUser = (user)=> {
+    if (user.password !== '') {
+      auth
+        .register(user.password, user.email)
+        .then(res => {
+          if (res.data.email) {
+            setIsRegistrationResult(true);
+          } else { setIsRegistrationResult(false); }
+          setIsInfoTooltip(true);
+          navigate('/');
+        })
+        .catch(err => {
+          setIsRegistrationResult(false);
+          setIsInfoTooltip(true);
+          navigate('/');
+          console.log(err)})
+    }
+  }
+
+ const handleUserAuth = (user) =>{
+  if (!user.username || !user.password) {
+    return
+  }
+  auth
+    .authorize(user.password, user.username)
+    .then(res => {
+      if (res.token) {
+        setLogin(user.username);
+        localStorage.setItem('token', res.token);
+        handleLogin();
+        navigate('/');
+      }
+    })
+    .catch(
+    (err) => { navigate('/sign-up');
+    console.log(err); })
+ }
+
   return (
     <CurrentUserContext.Provider value={ currentUser }>
       <div className="page">
@@ -203,8 +253,8 @@ function App() {
                 onCardDelete={ handleCardDelete }
               />
             </ProtectedRoute> } />
-            <Route path="/sign-up" element={ <Register onInfoTooltips={ setIsInfoTooltip } registrationResult={ setIsRegistrationResult } /> } />
-            <Route path="/sign-in" element={ <Login onLogin={ handleLogin } /> } />
+            <Route path="/sign-up" element={ <Register onRegisterUser={ handleRegisterUser } foTooltips={ setIsInfoTooltip } registrationResult={ setIsRegistrationResult } /> } />
+            <Route path="/sign-in" element={ <Login onAuthUser={ handleUserAuth } /> } />
             <Route path="*" element={ <Navigate to="/" /> } />
           </Routes>
           <Footer />

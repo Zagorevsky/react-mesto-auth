@@ -2,7 +2,6 @@ import React from "react";
 import { Link, useLocation } from 'react-router-dom';
 
 function Header({ loggedIn, logOut, login }) {
-  // const location = useLocation();
   const PathSignIn = (useLocation().pathname === "/sign-in")
   return (
     <header className="header">

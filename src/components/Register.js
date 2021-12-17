@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import * as auth from '../utils/auth';
+import { Link } from 'react-router-dom';
 
-export default function Register({ onInfoTooltips, registrationResult}) {
+export default function Register({ onRegisterUser }) {
 
   const [values, setValues] = useState({
     email: '',
     password: ''
   })
-  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -20,19 +18,7 @@ export default function Register({ onInfoTooltips, registrationResult}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (values.password !== '') {
-      auth
-        .register(values.password, values.email)
-        .then(res => {
-          if (res.data) {
-            registrationResult(true);
-          } else { registrationResult(false); }
-          onInfoTooltips(true);
-          navigate('/');
-        })
-        .catch(err => {
-          console.log(err)})
-    }
+    onRegisterUser({ password: values.password, email: values.email })
   }
 
   return (
@@ -42,9 +28,9 @@ export default function Register({ onInfoTooltips, registrationResult}) {
       </p>
       <form onSubmit={ handleSubmit } className="register__form">
         <input className="auth__input" id="email" name="email" type="email"
-        value={ values.email } onChange={ handleChange } />
+          value={ values.email } onChange={ handleChange } />
         <input className="auth__input" id="password" name="password" type="password"
-        value={ values.password } onChange={ handleChange } />
+          value={ values.password } onChange={ handleChange } />
         <button className="auth__button" type="submit" onSubmit={ handleSubmit }>Зарегистрироваться</button>
       </form>
       <div className="auth__menu">

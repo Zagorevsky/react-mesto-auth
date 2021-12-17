@@ -1,5 +1,6 @@
 // импортируем ключ авторзации на сервере
 import {authorization} from './utils.js'
+import { handlerError } from './auth.js'
 
 // используем готовый класс из прошлой работы для получения данных с сервера
 class Api {
@@ -8,13 +9,7 @@ class Api {
     this._headers = options.headers;
   }
 
-  _handlerError = (res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    // если ошибка, отклоняем промис
-    return Promise.reject(`Ошибка: ${res.status}`);
-  }
+
 
   // запрос карточек из базы данных
   getInitialCards() {
@@ -22,7 +17,7 @@ class Api {
       method: 'GET',
       headers: this._headers
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // запрос данных профиля с сервера
@@ -31,7 +26,7 @@ class Api {
       method: 'GET',
       headers: this._headers
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // запись новой карточки на сервер
@@ -41,7 +36,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify(data)
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // запись данных профиля на серве
@@ -51,7 +46,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify(data)
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // запись данных  автара на серве
@@ -61,7 +56,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify(data)
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // спереключатель лайков на сервере
@@ -75,7 +70,7 @@ class Api {
       method: 'PUT',
       headers: this._headers,
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // удалить лайк с сервера
@@ -84,7 +79,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers,
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
 
   // удалить карту с сервера
@@ -93,9 +88,8 @@ class Api {
       method: 'DELETE',
       headers: this._headers,
     })
-      .then(this._handlerError);
+      .then(handlerError);
   }
-
 }
 
 // создаем экземпляр класса Api и экспоортируем его
