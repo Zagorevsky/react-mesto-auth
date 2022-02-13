@@ -143,7 +143,7 @@ function App() {
     }
     document.addEventListener('keydown', closeByEscape);
     return () => document.removeEventListener('keydown', closeByEscape)
-}, [])
+  }, [])
 
   // закрытие всех попапов в одном обработчике
   function closeAllPopups() {
@@ -198,7 +198,7 @@ function App() {
       .catch((err) => { console.log(err) }); // выведем ошибку в консоль
   }
 
-  const handleRegisterUser = (user)=> {
+  const handleRegisterUser = (user) => {
     if (user.password !== '') {
       auth
         .register(user.password, user.email)
@@ -213,28 +213,31 @@ function App() {
           setIsRegistrationResult(false);
           setIsInfoTooltip(true);
           navigate('/');
-          console.log(err)})
+          console.log(err)
+        })
     }
   }
 
- const handleUserAuth = (user) =>{
-  if (!user.username || !user.password) {
-    return
+  const handleUserAuth = (user) => {
+    if (!user.username || !user.password) {
+      return
+    }
+    auth
+      .authorize(user.password, user.username)
+      .then(res => {
+        if (res.token) {
+          setLogin(user.username);
+          localStorage.setItem('token', res.token);
+          handleLogin();
+          navigate('/');
+        }
+      })
+      .catch(
+        (err) => {
+          navigate('/sign-up');
+          console.log(err);
+        })
   }
-  auth
-    .authorize(user.password, user.username)
-    .then(res => {
-      if (res.token) {
-        setLogin(user.username);
-        localStorage.setItem('token', res.token);
-        handleLogin();
-        navigate('/');
-      }
-    })
-    .catch(
-    (err) => { navigate('/sign-up');
-    console.log(err); })
- }
 
   return (
     <CurrentUserContext.Provider value={ currentUser }>

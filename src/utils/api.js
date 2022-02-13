@@ -9,8 +9,6 @@ class Api {
     this._headers = options.headers;
   }
 
-
-
   // запрос карточек из базы данных
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
@@ -59,7 +57,7 @@ class Api {
       .then(handlerError);
   }
 
-  // спереключатель лайков на сервере
+  // переключатель лайков на сервере
   changeLikeCardStatus(id, isLiked) {
     return isLiked ?  this._addLikesToServer(id) :this._deleteLikesToServer(id)
   }
@@ -92,11 +90,11 @@ class Api {
   }
 }
 
-// создаем экземпляр класса Api и экспоортируем его
+// создаем экземпляр класса Api и экспоортируем его https://mesto.nomoreparties.co/v1/cohort-29
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-29',
+  baseUrl: 'https://api.zagor.students.nomoredomains.work',
   headers: {
-    authorization: authorization,
+    // authorization: authorization,
     'Content-Type': 'application/json'
   }
 });

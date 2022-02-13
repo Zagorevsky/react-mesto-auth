@@ -11,7 +11,7 @@ function Header({ loggedIn, logOut, login }) {
           <p className="header__login">{ login }</p>
           <Link className="header__link" onClick={ logOut } to="/sign-in">Выйти</Link>
         </div>) : (
-        <Link className="header__link" to={ `${PathSignIn ?"/sign-up":"/sign-in"}`}>{ `${PathSignIn ?"Регистрация":"Войти"}`}</Link>) }
+        <Link className="header__link" to={ `${PathSignIn ? "/sign-up" : "/sign-in"}` }>{ `${PathSignIn ? "Регистрация" : "Войти"}` }</Link>) }
     </header>
   );
 
